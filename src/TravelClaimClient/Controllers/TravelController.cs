@@ -9,7 +9,7 @@ namespace TravelClaimClient.Controllers
     [Route("api/[controller]")]
     public class TravelController : Controller
     {
-        private 
+
         public TravelController()
         {
             
