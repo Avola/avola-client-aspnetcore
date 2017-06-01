@@ -23,7 +23,7 @@ namespace TravelClaimClient.Controllers
 
         [HttpPost]
         [Route("checkpolicycoverage")]
-        public async Task<string> CheckPolicyCoverage([FromBody] object person, string policynumber)
+        public async Task<string> CheckPolicyCoverage([FromBody] string policynumber)
         {
             var execdata = new List<ExecutionRequestData>()
             {
@@ -35,32 +35,32 @@ namespace TravelClaimClient.Controllers
                 new ExecutionRequestData()
                 {
                     Key = 35,
-                    Value = "FRONTseasonal"
+                    Value = "Not Fixed Seasonal Stand"
                 },
                 new ExecutionRequestData()
                 {
                     Key = 36,
-                    Value = "FRONTtravelvorbusiness"
+                    Value = "No Business Travel"
                 },
                 new ExecutionRequestData()
                 {
                     Key = 39,
-                    Value = "FRONTeinddatumreis"
+                    Value = "21/03/2017"
                 },
                 new ExecutionRequestData()
                 {
                     Key = 41,
-                    Value = "FRONTstartdatumreis"
+                    Value = "01/03/2017"
                 },
                 new ExecutionRequestData()
                 {
                     Key = 42,
-                    Value = "FONTwintersporttijdensreis"
+                    Value = "No Winter Sports"
                 },
                 new ExecutionRequestData()
                 {
                     Key = 45,
-                    Value = "FRONTcrimeofgeencrime"
+                    Value = "No Crime or Attempt to Crime"
                 },
                 new ExecutionRequestData()
                 {
@@ -95,40 +95,47 @@ namespace TravelClaimClient.Controllers
                 new ExecutionRequestData()
                 {
                     Key = 72,
-                    Value = "FRONTdurationtype"
+                    Value = "Short Term"
                 },
                 new ExecutionRequestData()
                 {
                     Key = 75,
-                    Value = "FRONTPOLICYSTATUS"
+                    Value = "Not Found"
                 },
                 new ExecutionRequestData()
                 {
                     Key = 77,
-                    Value = "FRONTworldocverage"
+                    Value = "World Coverage"
                 },
                 new ExecutionRequestData()
                 {
                     Key = 78,
-                    Value = "FRONTwintersportscoverage"
+                    Value = "Not Covered"
                 },
                 new ExecutionRequestData()
                 {
                     Key = 83,
-                    Value = "FRONTwanneer"
+                    Value = "15/03/2017"
                 },
                 new ExecutionRequestData()
                 {
                     Key = 86,
-                    Value = "FRONTresidencecountry"
+                    Value = "Belgium"
                 },
                 new ExecutionRequestData()
                 {
                     Key = 87,
-                    Value = "FRONTtowhichcountry"
+                    Value = "Italy"
                 }
             };
-            var metadata = new List<ExecutionRequestData>();
+            var metadata = new List<ExecutionRequestData>()
+            {
+                new ExecutionRequestData()
+                {
+                    Key = 90,
+                    Value = policynumber
+                }
+            };
 
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
