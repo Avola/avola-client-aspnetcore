@@ -9,8 +9,8 @@ namespace TravelClaimClient
     {
         public string AuthUrl { get; set; }
         public string AuthScope { get; set; }
-        public string IdsrvrBaseUri { get; set; }
-        public string IdsrvrClient { get; set; }
-        public string IdsrvrSecret { get; set; }
+        public string BaseUri { get; set; }
+        public string Client { get; set; }
+        public string Secret { get; set; }
     }
 }

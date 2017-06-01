@@ -17,7 +17,7 @@ namespace TravelClaimClient.Controllers
         public TravelController(IOptions<AppSettings> appSettings)
         {
             _appSettings = appSettings.Value;
-            _avolaApiClient = new AvolaApiClient(_appSettings.IdsrvrBaseUri, _appSettings.IdsrvrClient, _appSettings.IdsrvrSecret, _appSettings);
+            _avolaApiClient = new AvolaApiClient(_appSettings.BaseUri, _appSettings.Client, _appSettings.Secret, _appSettings);
         }
         [HttpPost]
         [Route("checkpolicycoverage")]
