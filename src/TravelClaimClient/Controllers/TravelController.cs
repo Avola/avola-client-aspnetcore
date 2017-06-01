@@ -9,36 +9,45 @@ namespace TravelClaimClient.Controllers
     [Route("api/[controller]")]
     public class TravelController : Controller
     {
-        // GET api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private 
+        public TravelController()
         {
-            return new string[] { "value1", "value2" };
+            
         }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get([FromBody]int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        [Route("checkpolicycoverage")]
+        public string CheckPolicyCoverage([FromBody] object person)
         {
+            return "Covered/Not Covered";
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPost]
+        [Route("checkobcjectcoverage")]
+        public string CheckLuggageObjectCoverage([FromBody] object luggageobject)
         {
+            return "Covered/Not Covered";
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPost]
+        [Route("checkclaimmandate")]
+        public string CheckClaimSettleMandate([FromBody] object claim)
         {
+            return "Flexible Mandate/No Flexible Mandate";
         }
+
+        [HttpPost]
+        [Route("checkclaimobjectmandate")]
+        public string CheckObjectClaimSettleMandate([FromBody] object objectclaim)
+        {
+            return "Flexible Mandate/No Flexible Mandate";
+        }
+
+        [HttpPost]
+        [Route("checkobjectcompensationamount")]
+        public string CheckObjectCompensation([FromBody] object claim)
+        {
+            return "0EUR";
+        }
+
     }
 }
