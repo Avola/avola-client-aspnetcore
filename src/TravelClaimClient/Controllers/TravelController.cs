@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using TravelClaimClient.Models;
 
 namespace TravelClaimClient.Controllers
@@ -144,7 +145,7 @@ namespace TravelClaimClient.Controllers
             var hitconclusion = result.HitConclusions[0];
 
 
-            return hitconclusion.Value;
+            return JsonConvert.SerializeObject(hitconclusion.Value);
         }
 
         [HttpPost]
