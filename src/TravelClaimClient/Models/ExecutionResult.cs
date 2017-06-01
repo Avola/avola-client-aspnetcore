@@ -10,10 +10,10 @@ namespace TravelClaimClient.Models
     {
         public int DecisionTableId { get; set; }
         public int DecisionServiceId { get; set; }
-
+        public string Reference { get; set; }
+        public List<int> FinalConclusionBusinessDataIds { get; set; }
         public ConclusionValueType ConclusionValueType { get; set; }
-        public List<HitConclusion> HitConclusions { get; set; }
-        public List<ErrorMessage> Errors { get; set; }
-        public Dictionary<int, string> BusinessDataValues { get; set; }
+        public List<HitConclusion> HitConclusions { get; set; } = new List<HitConclusion>();
+        public List<ErrorMessage> Errors { get; set; } = new List<ErrorMessage>();
     }
 }

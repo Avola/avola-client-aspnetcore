@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -19,15 +20,124 @@ namespace TravelClaimClient.Controllers
             _appSettings = appSettings.Value;
             _avolaApiClient = new AvolaApiClient(_appSettings.BaseUri, _appSettings.Client, _appSettings.Secret, _appSettings);
         }
+
         [HttpPost]
         [Route("checkpolicycoverage")]
-        public async Task<string> CheckPolicyCoverage([FromBody] object person)
+        public async Task<string> CheckPolicyCoverage([FromBody] object person, string policynumber)
         {
+            var execdata = new List<ExecutionRequestData>()
+            {
+                new ExecutionRequestData()
+                {
+                    Key = 34,
+                    Value = "Paid"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 35,
+                    Value = "FRONTseasonal"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 36,
+                    Value = "FRONTtravelvorbusiness"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 39,
+                    Value = "FRONTeinddatumreis"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 41,
+                    Value = "FRONTstartdatumreis"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 42,
+                    Value = "FONTwintersporttijdensreis"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 45,
+                    Value = "FRONTcrimeofgeencrime"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 47,
+                    Value = "No Driving Without Drivers License"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 48,
+                    Value = "Not Foreseeable"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 65,
+                    Value = "Premium Payment Done"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 67,
+                    Value = "No War, No Riots nor Molest"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 68,
+                    Value = "Covered"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 70,
+                    Value = "Present"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 72,
+                    Value = "FRONTdurationtype"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 75,
+                    Value = "FRONTPOLICYSTATUS"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 77,
+                    Value = "FRONTworldocverage"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 78,
+                    Value = "FRONTwintersportscoverage"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 83,
+                    Value = "FRONTwanneer"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 86,
+                    Value = "FRONTresidencecountry"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 87,
+                    Value = "FRONTtowhichcountry"
+                }
+            };
+            var metadata = new List<ExecutionRequestData>();
+
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() {DecisionServiceId = 5, VersionNumber = 1});
+                    new ApiExecutionRequest() {DecisionServiceId = 5, VersionNumber = 1, ExecutionRequestData = execdata, ExecutionRequestMetaData = metadata, Reference = $"policycoverage--{policynumber}"});
 
-            return "Covered/Not Covered";
+            var hitconclusion = result.HitConclusions[0];
+
+
+            return hitconclusion.Value;
         }
 
         [HttpPost]
@@ -38,7 +148,10 @@ namespace TravelClaimClient.Controllers
                 await _avolaApiClient.ExecuteDecisionNoTrace(
                     new ApiExecutionRequest() { DecisionServiceId = 2, VersionNumber = 1 });
 
-            return "Covered/Not Covered";
+            var hitconclusion = result.HitConclusions[0];
+
+
+            return hitconclusion.Value;
         }
 
         [HttpPost]
