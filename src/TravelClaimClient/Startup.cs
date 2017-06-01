@@ -35,6 +35,9 @@ namespace TravelClaimClient
             {
                 c.SwaggerDoc("v1", new Info { Title = "Avola TravelClaim Api", Version = "v1" });
             });
+
+            var appSettings = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettings);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +45,8 @@ namespace TravelClaimClient
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            
 
             app.UseMvc();
 
