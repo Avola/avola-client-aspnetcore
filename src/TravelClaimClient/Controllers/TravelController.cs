@@ -24,7 +24,7 @@ namespace TravelClaimClient.Controllers
 
         [HttpPost]
         [Route("checkpolicycoverage")]
-        public async Task<string> CheckPolicyCoverage([FromBody] string policynumber)
+        public async Task<string> CheckPolicyCoverage([FromBody] CheckPolicyCoverage checkPolicyCoverage)
         {
             var execdata = new List<ExecutionRequestData>()
             {
@@ -41,27 +41,27 @@ namespace TravelClaimClient.Controllers
                 new ExecutionRequestData()
                 {
                     Key = 36,
-                    Value = "No Business Travel"
+                    Value = checkPolicyCoverage.BusinessTravel
                 },
                 new ExecutionRequestData()
                 {
                     Key = 39,
-                    Value = "21/03/2017"
+                    Value = checkPolicyCoverage.TravelEndDate
                 },
                 new ExecutionRequestData()
                 {
                     Key = 41,
-                    Value = "01/03/2017"
+                    Value = checkPolicyCoverage.TravelStartDate
                 },
                 new ExecutionRequestData()
                 {
                     Key = 42,
-                    Value = "No Winter Sports"
+                    Value = checkPolicyCoverage.WinterSportsTravel
                 },
                 new ExecutionRequestData()
                 {
                     Key = 45,
-                    Value = "No Crime or Attempt to Crime"
+                    Value = checkPolicyCoverage.CrimeorAttempttoCrime
                 },
                 new ExecutionRequestData()
                 {
@@ -116,7 +116,7 @@ namespace TravelClaimClient.Controllers
                 new ExecutionRequestData()
                 {
                     Key = 83,
-                    Value = "15/03/2017"
+                    Value = checkPolicyCoverage.TravelClaimEventDate
                 },
                 new ExecutionRequestData()
                 {
@@ -126,7 +126,7 @@ namespace TravelClaimClient.Controllers
                 new ExecutionRequestData()
                 {
                     Key = 87,
-                    Value = "Italy"
+                    Value = checkPolicyCoverage.TravelDestinationCountry
                 }
             };
             var metadata = new List<ExecutionRequestData>()
@@ -134,13 +134,13 @@ namespace TravelClaimClient.Controllers
                 new ExecutionRequestData()
                 {
                     Key = 90,
-                    Value = policynumber
+                    Value = checkPolicyCoverage.PolicyNumber
                 }
             };
 
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() {DecisionServiceId = 5, VersionNumber = 1, ExecutionRequestData = execdata, ExecutionRequestMetaData = metadata, Reference = $"policycoverage--{policynumber}"});
+                    new ApiExecutionRequest() {DecisionServiceId = 5, VersionNumber = 1, ExecutionRequestData = execdata, ExecutionRequestMetaData = metadata, Reference = $"policycoverage--{checkPolicyCoverage.PolicyNumber}"});
 
             var hitconclusion = result.HitConclusions[0];
 
