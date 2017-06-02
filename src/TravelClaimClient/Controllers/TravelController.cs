@@ -149,17 +149,71 @@ namespace TravelClaimClient.Controllers
         }
 
         [HttpPost]
-        [Route("checkobcjectcoverage")]
-        public async Task<string> CheckLuggageObjectCoverage([FromBody] object luggageobject)
+        [Route("checkobjectcoverage")]
+        public async Task<string> CheckLuggageObjectCoverage([FromBody] LuggageClaimObjectCoverage luggageobject)
         {
+            var execdata = new List<ExecutionRequestData>()
+            {
+                new ExecutionRequestData()
+                {
+                    Key = 1,
+                    Value = "No Careless Use"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 2,
+                    Value = "No Damage to Lodging"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 3,
+                    Value = "Liable"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 5,
+                    Value = luggageobject.LuggageClaimCause
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 9,
+                    Value = luggageobject.LuggageClaimObjectinHandLuggage
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 10,
+                    Value = luggageobject.LuggageClaimObjectLocation
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 11,
+                    Value = "Direct Supervision"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 14,
+                    Value = luggageobject.LuggageClaimObject
+                }
+
+
+            };
+            var metadata = new List<ExecutionRequestData>()
+            {
+                new ExecutionRequestData()
+                {
+                    Key = 90,
+                    Value = luggageobject.PolicyNumber
+                }
+            };
+
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() { DecisionServiceId = 2, VersionNumber = 1 });
+                    new ApiExecutionRequest() { DecisionServiceId = 2, VersionNumber = 1 , ExecutionRequestData = execdata, ExecutionRequestMetaData = metadata, Reference = $"policyobjectcoverage--{luggageobject.PolicyNumber}"});
 
             var hitconclusion = result.HitConclusions[0];
 
 
-            return hitconclusion.Value;
+            return JsonConvert.SerializeObject(hitconclusion.Value);
         }
 
         [HttpPost]
@@ -205,3 +259,4 @@ namespace TravelClaimClient.Controllers
 
     }
 }
+
