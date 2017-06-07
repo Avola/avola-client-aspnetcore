@@ -86,7 +86,7 @@ namespace TravelClaimClient.Controllers
                 new ExecutionRequestData()
                 {
                     Key = 68,
-                    Value = "Covered"
+                    Value = "Not Covered"
                 },
                 new ExecutionRequestData()
                 {
@@ -101,7 +101,7 @@ namespace TravelClaimClient.Controllers
                 new ExecutionRequestData()
                 {
                     Key = 75,
-                    Value = "Not Found"
+                    Value = "Found"
                 },
                 new ExecutionRequestData()
                 {
@@ -121,7 +121,7 @@ namespace TravelClaimClient.Controllers
                 new ExecutionRequestData()
                 {
                     Key = 86,
-                    Value = "Belgium"
+                    Value = "Netherlands"
                 },
                 new ExecutionRequestData()
                 {
