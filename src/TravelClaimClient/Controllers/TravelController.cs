@@ -19,7 +19,8 @@ namespace TravelClaimClient.Controllers
         public TravelController(IOptions<AppSettings> appSettings)
         {
             _appSettings = appSettings.Value;
-            _avolaApiClient = new AvolaApiClient(_appSettings.BaseUri, _appSettings.Client, _appSettings.Secret, _appSettings);
+            _avolaApiClient = new AvolaApiClient(_appSettings.BaseUri, _appSettings.Client, _appSettings.Secret,
+                _appSettings);
         }
 
         [HttpPost]
@@ -140,7 +141,14 @@ namespace TravelClaimClient.Controllers
 
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() {DecisionServiceId = 5, VersionNumber = 1, ExecutionRequestData = execdata, ExecutionRequestMetaData = metadata, Reference = $"policycoverage--{checkPolicyCoverage.PolicyNumber}"});
+                    new ApiExecutionRequest()
+                    {
+                        DecisionServiceId = 5,
+                        VersionNumber = 1,
+                        ExecutionRequestData = execdata,
+                        ExecutionRequestMetaData = metadata,
+                        Reference = $"policycoverage--{checkPolicyCoverage.PolicyNumber}"
+                    });
 
             var hitconclusion = result.HitConclusions[0];
 
@@ -208,7 +216,14 @@ namespace TravelClaimClient.Controllers
 
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() { DecisionServiceId = 2, VersionNumber = 1 , ExecutionRequestData = execdata, ExecutionRequestMetaData = metadata, Reference = $"policyobjectcoverage--{luggageobject.PolicyNumber}"});
+                    new ApiExecutionRequest()
+                    {
+                        DecisionServiceId = 2,
+                        VersionNumber = 1,
+                        ExecutionRequestData = execdata,
+                        ExecutionRequestMetaData = metadata,
+                        Reference = $"policyobjectcoverage--{luggageobject.PolicyNumber}"
+                    });
 
             var hitconclusion = result.HitConclusions[0];
 
@@ -222,7 +237,7 @@ namespace TravelClaimClient.Controllers
         {
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() { DecisionServiceId = 4, VersionNumber = 1 });
+                    new ApiExecutionRequest() {DecisionServiceId = 4, VersionNumber = 1});
 
             return "Flexible Mandate/No Flexible Mandate";
         }
@@ -233,7 +248,7 @@ namespace TravelClaimClient.Controllers
         {
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() { DecisionServiceId = 3, VersionNumber = 1 });
+                    new ApiExecutionRequest() {DecisionServiceId = 3, VersionNumber = 1});
 
             return "Flexible Mandate/No Flexible Mandate";
         }
@@ -244,7 +259,7 @@ namespace TravelClaimClient.Controllers
         {
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() { DecisionServiceId = 1, VersionNumber = 2 });
+                    new ApiExecutionRequest() {DecisionServiceId = 1, VersionNumber = 2});
 
             return "0EUR";
         }
@@ -257,6 +272,15 @@ namespace TravelClaimClient.Controllers
             return list;
         }
 
+        [HttpGet]
+        [Route("getdecisionserviceversiondescription/{decisionserviceid}/{version}")]
+        public async Task<string> GetDecisionserviceVersionDescription(int decisionserviceid, int version)
+        {
+            var versionDescription = await _avolaApiClient.GetDecisionserviceVersionDescription(decisionserviceid, version);
+            return JsonConvert.SerializeObject(versionDescription);
+
+            //return versionDescription;
+        }
     }
 }
 
