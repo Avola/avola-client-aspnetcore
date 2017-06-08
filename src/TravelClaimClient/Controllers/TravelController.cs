@@ -237,7 +237,7 @@ namespace TravelClaimClient.Controllers
         {
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() {DecisionServiceId = 4, VersionNumber = 1});
+                    new ApiExecutionRequest() { DecisionServiceId = 4, VersionNumber = 1 });
 
             return "Flexible Mandate/No Flexible Mandate";
         }
@@ -248,7 +248,7 @@ namespace TravelClaimClient.Controllers
         {
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() {DecisionServiceId = 3, VersionNumber = 1});
+                    new ApiExecutionRequest() { DecisionServiceId = 3, VersionNumber = 1 });
 
             return "Flexible Mandate/No Flexible Mandate";
         }
@@ -259,17 +259,9 @@ namespace TravelClaimClient.Controllers
         {
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() {DecisionServiceId = 1, VersionNumber = 2});
+                    new ApiExecutionRequest() { DecisionServiceId = 1, VersionNumber = 2 });
 
             return "0EUR";
-        }
-
-        [HttpGet]
-        [Route("listallservices")]
-        public async Task<IList<DecisionServiceDescription>> Listall()
-        {
-            var list = await _avolaApiClient.ListAvailableDecisionServices();
-            return list;
         }
 
         [HttpGet]
@@ -278,9 +270,23 @@ namespace TravelClaimClient.Controllers
         {
             var versionDescription = await _avolaApiClient.GetDecisionserviceVersionDescription(decisionserviceid, version);
             return JsonConvert.SerializeObject(versionDescription);
-
-            //return versionDescription;
         }
+
+        [HttpGet]
+        [Route("listavailabledecisionservices/{decisionserviceid}")]
+        public async Task<string> ListAvailableDecisionServices(int decisionserviceid)
+        {
+            var list = await _avolaApiClient.ListAvailableDecisionServices(decisionserviceid);
+            if (list == null || list.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return JsonConvert.SerializeObject(list[0].Versions);
+            }
+        }
+
     }
 }
 

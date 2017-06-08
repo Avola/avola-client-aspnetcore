@@ -123,7 +123,7 @@ namespace TravelClaimClient
             var url = "ApiExecution/decisions/list";
             if (decisionServiceId != null)
             {
-                url += $"/{decisionServiceId}";
+                url = $"ApiExecution/decisions/{decisionServiceId}";
             }
             return await DoSimpleRequest<IList<DecisionServiceDescription>>(url, HttpMethod.Get);
         }
