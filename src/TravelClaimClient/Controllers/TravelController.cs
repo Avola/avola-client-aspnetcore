@@ -335,8 +335,13 @@ namespace TravelClaimClient.Controllers
                         ExecutionRequestData = execdata
                     });
 
-            var hitconclusion = result.HitConclusions[0];
-            return JsonConvert.SerializeObject(hitconclusion.Value);
+            if (result.HitConclusions.Any())
+            {
+                var hitconclusion = result.HitConclusions[0];
+                return JsonConvert.SerializeObject(hitconclusion.Value);
+            }
+
+            return JsonConvert.SerializeObject(result.ConclusionValueType.ToString());
         }
 
         [HttpGet]
