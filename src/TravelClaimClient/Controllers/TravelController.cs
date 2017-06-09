@@ -273,17 +273,17 @@ namespace TravelClaimClient.Controllers
                 new ExecutionRequestData()
                 {
                     Key = 21,
-                    Value = "2015-05-31"
+                    Value = compensationAmount.LuggageClaimObjectPurchaseDate
                 },
                 new ExecutionRequestData()
                 {
                     Key = 22,
-                    Value = "575"
+                    Value = compensationAmount.LuggageClaimObjectPurchaseValue
                 },
                 new ExecutionRequestData()
                 {
                     Key = 83,
-                    Value = "2017-03-15"
+                    Value = compensationAmount.TravelClaimEventDate
                 },
             };
             if (compensationAmount.LuggageClaimObject == "Laptop Computer")
