@@ -255,13 +255,88 @@ namespace TravelClaimClient.Controllers
 
         [HttpPost]
         [Route("checkobjectcompensationamount")]
-        public async Task<string> CheckObjectCompensation([FromBody] object claim)
+        public async Task<string> CheckObjectCompensation(
+            [FromBody] LuggageClaimObjectCalculatedCompensationAmount compensationAmount)
         {
+            var execdata = new List<ExecutionRequestData>()
+            {
+                new ExecutionRequestData()
+                {
+                    Key = 14,
+                    Value = compensationAmount.LuggageClaimObject
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 17,
+                    Value = compensationAmount.LuggageClaimObjectCurrentSalesValue
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 21,
+                    Value = "2015-05-31"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 22,
+                    Value = "575"
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 83,
+                    Value = "2017-03-15"
+                },
+            };
+            if (compensationAmount.LuggageClaimObject == "Laptop Computer")
+            {
+                execdata.Add(
+                    new ExecutionRequestData()
+                    {
+                        Key = 23,
+                        Value = compensationAmount.LuggageClaimObjectRepair
+                    });
+
+                if (compensationAmount.LuggageClaimObjectRepair == "Repair")
+                {
+                    execdata.Add(
+                        new ExecutionRequestData()
+                        {
+                            Key = 24,
+                            Value = compensationAmount.LuggageClaimObjectRepairValue
+                        });
+                }
+            }
+            else
+            {
+                if (compensationAmount.TravelNumberofInsuredPersons == null)
+                    compensationAmount.TravelNumberofInsuredPersons = "1";
+                execdata.Add(
+                    new ExecutionRequestData()
+                    {
+                        Key = 40,
+                        Value = compensationAmount.TravelNumberofInsuredPersons
+                    });
+            }
+            if (compensationAmount.LuggageClaimObject == "Cosmetics")
+            {
+                execdata.Add(
+                    new ExecutionRequestData()
+                    {
+                        Key = 20,
+                        Value = compensationAmount.LuggageClaimObjectOpened
+                    });
+            }
+
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() { DecisionServiceId = 1, VersionNumber = 2 });
+                    new ApiExecutionRequest()
+                    {
+                        DecisionServiceId = 1,
+                        VersionNumber = 2,
+                        ExecutionRequestData = execdata
+                    });
 
-            return "0EUR";
+            var hitconclusion = result.HitConclusions[0];
+            return JsonConvert.SerializeObject(hitconclusion.Value);
         }
 
         [HttpGet]
