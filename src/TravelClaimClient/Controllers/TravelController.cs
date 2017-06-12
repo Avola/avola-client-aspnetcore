@@ -233,24 +233,160 @@ namespace TravelClaimClient.Controllers
 
         [HttpPost]
         [Route("checkclaimmandate")]
-        public async Task<string> CheckClaimSettleMandate([FromBody] object claim)
+        public async Task<string> CheckClaimSettleMandate([FromBody] TravelClaimSettlementMandate mandate)
         {
+            var execdata = new List<ExecutionRequestData>()
+            {
+                new ExecutionRequestData()
+                {
+                    Key = 49,
+                    Value = mandate.FrissScore
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 50,
+                    Value = mandate.NumberOfClaimObjectsWithoutFlexibleMandate
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 51,
+                    Value = mandate.NumberOfClaimsInPast3Years
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 58,
+                    Value = mandate.TotalCalculatedComensationAmount
+                }
+            };
+
+            var metadata = new List<ExecutionRequestData>()
+            {
+                new ExecutionRequestData()
+                {
+                    Key = 90,
+                    Value = mandate.PolicyNumber
+                }
+            };
+
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() { DecisionServiceId = 4, VersionNumber = 1 });
+                    new ApiExecutionRequest()
+                    {
+                        DecisionServiceId = 4,
+                        VersionNumber = 1,
+                        ExecutionRequestData = execdata,
+                        ExecutionRequestMetaData = metadata,
+                        Reference = $"ClaimMandate--{mandate.PolicyNumber}"
+                    });
 
-            return "Flexible Mandate/No Flexible Mandate";
+            if (result.HitConclusions.Any())
+            {
+                var hitconclusion = result.HitConclusions[0];
+                return JsonConvert.SerializeObject(hitconclusion.Value);
+            }
+
+            return JsonConvert.SerializeObject(result.ConclusionValueType.ToString());
         }
 
         [HttpPost]
         [Route("checkclaimobjectmandate")]
-        public async Task<string> CheckObjectClaimSettleMandate([FromBody] object objectclaim)
+        public async Task<string> CheckObjectClaimSettleMandate([FromBody] LuggageClaimObjectCalculatedCompensationAmount compensationAmount)
         {
+            var execdata = new List<ExecutionRequestData>()
+            {
+                new ExecutionRequestData()
+                {
+                    Key = 14,
+                    Value = compensationAmount.LuggageClaimObject
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 17,
+                    Value = compensationAmount.LuggageClaimObjectCurrentSalesValue
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 21,
+                    Value = compensationAmount.LuggageClaimObjectPurchaseDate
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 22,
+                    Value = compensationAmount.LuggageClaimObjectPurchaseValue
+                },
+                new ExecutionRequestData()
+                {
+                    Key = 83,
+                    Value = compensationAmount.TravelClaimEventDate
+                },
+            };
+            if (compensationAmount.LuggageClaimObject == "Laptop Computer")
+            {
+                execdata.Add(
+                    new ExecutionRequestData()
+                    {
+                        Key = 23,
+                        Value = compensationAmount.LuggageClaimObjectRepair
+                    });
+
+                if (compensationAmount.LuggageClaimObjectRepair == "Repair")
+                {
+                    execdata.Add(
+                        new ExecutionRequestData()
+                        {
+                            Key = 24,
+                            Value = compensationAmount.LuggageClaimObjectRepairValue
+                        });
+                }
+            }
+            else
+            {
+                if (compensationAmount.TravelNumberofInsuredPersons == null)
+                    compensationAmount.TravelNumberofInsuredPersons = "1";
+                execdata.Add(
+                    new ExecutionRequestData()
+                    {
+                        Key = 40,
+                        Value = compensationAmount.TravelNumberofInsuredPersons
+                    });
+            }
+            if (compensationAmount.LuggageClaimObject == "Cosmetics")
+            {
+                execdata.Add(
+                    new ExecutionRequestData()
+                    {
+                        Key = 20,
+                        Value = compensationAmount.LuggageClaimObjectOpened
+                    });
+            }
+
+            var metadata = new List<ExecutionRequestData>()
+            {
+                new ExecutionRequestData()
+                {
+                    Key = 90,
+                    Value = compensationAmount.PolicyNumber
+                }
+            };
+
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
-                    new ApiExecutionRequest() { DecisionServiceId = 3, VersionNumber = 1 });
+                    new ApiExecutionRequest()
+                    {
+                        DecisionServiceId = 3,
+                        VersionNumber = 1,
+                        ExecutionRequestData = execdata,
+                        ExecutionRequestMetaData = metadata,
+                        Reference = $"ObjectSettlementMandate--{compensationAmount.PolicyNumber}"
+                    });
 
-            return "Flexible Mandate/No Flexible Mandate";
+            if (result.HitConclusions.Any())
+            {
+                var hitconclusion = result.HitConclusions[0];
+                return JsonConvert.SerializeObject(hitconclusion.Value);
+            }
+
+            return JsonConvert.SerializeObject(result.ConclusionValueType.ToString());
         }
 
         [HttpPost]
@@ -326,13 +462,24 @@ namespace TravelClaimClient.Controllers
                     });
             }
 
+            var metadata = new List<ExecutionRequestData>()
+            {
+                new ExecutionRequestData()
+                {
+                    Key = 90,
+                    Value = compensationAmount.PolicyNumber
+                }
+            };
+
             var result =
                 await _avolaApiClient.ExecuteDecisionNoTrace(
                     new ApiExecutionRequest()
                     {
                         DecisionServiceId = 1,
                         VersionNumber = 2,
-                        ExecutionRequestData = execdata
+                        ExecutionRequestData = execdata,
+                        ExecutionRequestMetaData = metadata,
+                        Reference = $"ObjectCompensationAmount--{compensationAmount.PolicyNumber}"
                     });
 
             if (result.HitConclusions.Any())

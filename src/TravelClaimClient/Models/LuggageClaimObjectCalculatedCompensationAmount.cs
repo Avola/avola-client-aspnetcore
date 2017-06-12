@@ -16,5 +16,6 @@ namespace TravelClaimClient.Models
         public string LuggageClaimObjectRepairValue { get; set; }
         public string TravelNumberofInsuredPersons { get; set; }
         public string TravelClaimEventDate { get; set; }
+        public string PolicyNumber { get; set; }
     }
 }
