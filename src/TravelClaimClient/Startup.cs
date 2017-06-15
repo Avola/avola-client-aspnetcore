@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -56,7 +58,11 @@ namespace TravelClaimClient
             }
             else
             {
-                app.UseMiddleware<IpRestrictionMiddleware>();
+                //Authorize the swagger see -> SwaggerAuthorizeExtensions
+                app.UseSwaggerAuthorized();
+
+                //Uncomment if you want full ip restriction
+                //app.UseMiddleware<IpRestrictionMiddleware>();
             }
 
             app.UseCors(builder =>
