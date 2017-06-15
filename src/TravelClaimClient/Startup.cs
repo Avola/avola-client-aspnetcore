@@ -28,6 +28,9 @@ namespace TravelClaimClient
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // IP Security settings
+            services.Configure<IpSecuritySettings>(Configuration.GetSection("IpSecuritySettings"));
+
             // Add framework services.
             services.AddMvc();
 
@@ -48,9 +51,16 @@ namespace TravelClaimClient
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            if (env.IsDevelopment())
+            {
+            }
+            else
+            {
+                app.UseMiddleware<IpRestrictionMiddleware>();
+            }
+
             app.UseCors(builder =>
                 builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-
 
             app.UseMvc();
 
