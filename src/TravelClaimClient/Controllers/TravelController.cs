@@ -130,6 +130,16 @@ namespace TravelClaimClient.Controllers
                     Value = checkPolicyCoverage.TravelDestinationCountry
                 }
             };
+
+            if (checkPolicyCoverage.SportPracticed != null && checkPolicyCoverage.SportPracticed != "-")
+            {
+                execdata.Add(new ExecutionRequestData()
+                {
+                    Key = 52,
+                    Value = checkPolicyCoverage.SportPracticed
+                });
+            }
+
             var metadata = new List<ExecutionRequestData>()
             {
                 new ExecutionRequestData()
@@ -516,4 +526,6 @@ namespace TravelClaimClient.Controllers
 
     }
 }
+
+
 
