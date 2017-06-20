@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -28,6 +30,9 @@ namespace TravelClaimClient
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // IP Security settings
+            services.Configure<IpSecuritySettings>(Configuration.GetSection("IpSecuritySettings"));
+
             // Add framework services.
             services.AddMvc();
 
@@ -48,9 +53,20 @@ namespace TravelClaimClient
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            if (env.IsDevelopment())
+            {
+            }
+            else
+            {
+                //Authorize the swagger see -> SwaggerAuthorizeExtensions
+                app.UseSwaggerAuthorized();
+
+                //Uncomment if you want full ip restriction
+                //app.UseMiddleware<IpRestrictionMiddleware>();
+            }
+
             app.UseCors(builder =>
                 builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-
 
             app.UseMvc();
 
